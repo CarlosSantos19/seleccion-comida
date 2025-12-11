@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Selección de Comida - Funcionarios</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="background-decoration">
+        <div class="food-icon-bg">🍽️</div>
+        <div class="food-icon-bg">🥘</div>
+        <div class="food-icon-bg">🍴</div>
+    </div>
+
+    <div class="container">
+        <div class="header-section">
+            <div class="header-icon">🍽️</div>
+            <h1>Selección de Comida</h1>
+            <p class="subtitle">Elige tus alimentos favoritos</p>
+        </div>
+
+        <div class="selector-section">
+            <div class="funcionario-selector">
+                <label for="funcionarioSelect">
+                    <i class="fas fa-user"></i> Seleccionar Funcionario:
+                </label>
+                <select id="funcionarioSelect">
+                    <option value="">-- Seleccione un funcionario --</option>
+                </select>
+            </div>
+
+            <div class="food-counters" id="foodCounters">
+                <h2><i class="fas fa-utensils"></i> Seleccione sus alimentos:</h2>
+                <div class="food-grid">
+                    <div class="food-item" data-food="carimanola">
+                        <div class="food-image">🥟</div>
+                        <span class="food-name">Carimañola</span>
+                        <div class="counter">
+                            <button class="btn-decrease" data-food="carimanola">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                            <span class="count" id="count-carimanola">0</span>
+                            <button class="btn-increase" data-food="carimanola">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="food-item" data-food="tamal">
+                        <div class="food-image">🫔</div>
+                        <span class="food-name">Tamal</span>
+                        <div class="counter">
+                            <button class="btn-decrease" data-food="tamal">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                            <span class="count" id="count-tamal">0</span>
+                            <button class="btn-increase" data-food="tamal">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="food-item" data-food="arepa_huevo">
+                        <div class="food-image">🥚</div>
+                        <span class="food-name">Arepa E'huevo</span>
+                        <div class="counter">
+                            <button class="btn-decrease" data-food="arepa_huevo">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                            <span class="count" id="count-arepa_huevo">0</span>
+                            <button class="btn-increase" data-food="arepa_huevo">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="food-item" data-food="rosquete">
+                        <div class="food-image">🧀</div>
+                        <span class="food-name">Rosquete de queso</span>
+                        <div class="counter">
+                            <button class="btn-decrease" data-food="rosquete">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                            <span class="count" id="count-rosquete">0</span>
+                            <button class="btn-increase" data-food="rosquete">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="food-item" data-food="patacones">
+                        <div class="food-image">🍌</div>
+                        <span class="food-name">Patacones en matrimonio</span>
+                        <div class="counter">
+                            <button class="btn-decrease" data-food="patacones">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                            <span class="count" id="count-patacones">0</span>
+                            <button class="btn-increase" data-food="patacones">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="food-item" data-food="kibbeh">
+                        <div class="food-image">🥙</div>
+                        <span class="food-name">Kibbeh</span>
+                        <div class="counter">
+                            <button class="btn-decrease" data-food="kibbeh">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                            <span class="count" id="count-kibbeh">0</span>
+                            <button class="btn-increase" data-food="kibbeh">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="food-item" data-food="arepa_quesuda">
+                        <div class="food-image">🫓</div>
+                        <span class="food-name">Arepa frita quesuda</span>
+                        <div class="counter">
+                            <button class="btn-decrease" data-food="arepa_quesuda">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                            <span class="count" id="count-arepa_quesuda">0</span>
+                            <button class="btn-increase" data-food="arepa_quesuda">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="food-item" data-food="arepuela_dulce">
+                        <div class="food-image">🍩</div>
+                        <span class="food-name">Arepuela dulce de anís</span>
+                        <div class="counter">
+                            <button class="btn-decrease" data-food="arepuela_dulce">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                            <span class="count" id="count-arepuela_dulce">0</span>
+                            <button class="btn-increase" data-food="arepuela_dulce">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="food-item" data-food="arepuela_huevo">
+                        <div class="food-image">🍳</div>
+                        <span class="food-name">Arepuela e'huevo</span>
+                        <div class="counter">
+                            <button class="btn-decrease" data-food="arepuela_huevo">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                            <span class="count" id="count-arepuela_huevo">0</span>
+                            <button class="btn-increase" data-food="arepuela_huevo">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="actions">
+                    <button class="btn-save" id="btnSave">
+                        <i class="fas fa-save"></i> Guardar Selección
+                    </button>
+                    <button class="btn-reset" id="btnReset">
+                        <i class="fas fa-eraser"></i> Limpiar
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="summary-section">
+            <h2><i class="fas fa-chart-bar"></i> Resumen de Selecciones</h2>
+            <div class="summary-controls">
+                <button class="btn-export" id="btnExport">
+                    <i class="fas fa-file-excel"></i> Exportar a Excel
+                </button>
+                <button class="btn-clear-all" id="btnClearAll">
+                    <i class="fas fa-trash-alt"></i> Limpiar Todo
+                </button>
+            </div>
+            <div id="summaryTable"></div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
