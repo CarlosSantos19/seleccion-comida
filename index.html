@@ -6,6 +6,8 @@
     <title>Selección de Comida - Funcionarios</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
 </head>
 <body>
     <div class="background-decoration">
@@ -175,8 +177,11 @@
         <div class="summary-section">
             <h2><i class="fas fa-chart-bar"></i> Resumen de Selecciones</h2>
             <div class="summary-controls">
+                <button class="btn-export-csv" id="btnExportCSV">
+                    <i class="fas fa-file-excel"></i> Exportar Excel
+                </button>
                 <button class="btn-export" id="btnExport">
-                    <i class="fas fa-file-excel"></i> Exportar a Excel
+                    <i class="fas fa-file-pdf"></i> Exportar PDF
                 </button>
                 <button class="btn-clear-all" id="btnClearAll">
                     <i class="fas fa-trash-alt"></i> Limpiar Todo

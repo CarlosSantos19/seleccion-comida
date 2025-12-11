@@ -70,6 +70,7 @@ const foodCounters = document.getElementById('foodCounters');
 const btnSave = document.getElementById('btnSave');
 const btnReset = document.getElementById('btnReset');
 const btnExport = document.getElementById('btnExport');
+const btnExportCSV = document.getElementById('btnExportCSV');
 const btnClearAll = document.getElementById('btnClearAll');
 const summaryTable = document.getElementById('summaryTable');
 
@@ -124,8 +125,11 @@ function configurarEventos() {
     // Botón reset
     btnReset.addEventListener('click', limpiarContadores);
 
-    // Botón exportar
-    btnExport.addEventListener('click', exportarAExcel);
+    // Botón exportar CSV
+    btnExportCSV.addEventListener('click', exportarAExcel);
+
+    // Botón exportar PDF
+    btnExport.addEventListener('click', exportarAPDF);
 
     // Botón limpiar todo
     btnClearAll.addEventListener('click', () => {
@@ -327,6 +331,144 @@ function exportarAExcel() {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+}
+
+// Exportar a PDF
+function exportarAPDF() {
+    if (Object.keys(selecciones).length === 0) {
+        alert('No hay datos para exportar');
+        return;
+    }
+
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+
+    // Configuración de colores
+    const primaryColor = [102, 126, 234]; // #667eea
+    const secondaryColor = [118, 75, 162]; // #764ba2
+
+    // Título
+    doc.setFillColor(primaryColor[0], primaryColor[1], primaryColor[2]);
+    doc.rect(0, 0, 210, 40, 'F');
+
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(24);
+    doc.setFont(undefined, 'bold');
+    doc.text('Selección de Comida', 105, 20, { align: 'center' });
+
+    doc.setFontSize(12);
+    doc.setFont(undefined, 'normal');
+    const fecha = new Date().toLocaleDateString('es-ES', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+    });
+    doc.text(`Fecha: ${fecha}`, 105, 30, { align: 'center' });
+
+    // Preparar datos para la tabla
+    const headers = [['Funcionario', ...ALIMENTOS.map(a => a.nombre), 'Total']];
+    const data = [];
+
+    // Agregar datos de cada funcionario
+    Object.keys(selecciones).sort().forEach(funcionario => {
+        const seleccion = selecciones[funcionario];
+        let total = 0;
+        const row = [funcionario];
+
+        ALIMENTOS.forEach(alimento => {
+            const cantidad = seleccion[alimento.id] || 0;
+            total += cantidad;
+            row.push(cantidad || '-');
+        });
+
+        row.push(total);
+        data.push(row);
+    });
+
+    // Fila de totales
+    const totalesRow = ['TOTALES'];
+    ALIMENTOS.forEach(alimento => {
+        let totalAlimento = 0;
+        Object.values(selecciones).forEach(seleccion => {
+            totalAlimento += seleccion[alimento.id] || 0;
+        });
+        totalesRow.push(totalAlimento);
+    });
+
+    let granTotal = 0;
+    Object.values(selecciones).forEach(seleccion => {
+        Object.values(seleccion).forEach(cantidad => {
+            granTotal += cantidad;
+        });
+    });
+    totalesRow.push(granTotal);
+    data.push(totalesRow);
+
+    // Crear tabla con autoTable
+    doc.autoTable({
+        head: headers,
+        body: data,
+        startY: 45,
+        theme: 'grid',
+        headStyles: {
+            fillColor: primaryColor,
+            textColor: [255, 255, 255],
+            fontStyle: 'bold',
+            halign: 'center',
+            fontSize: 9
+        },
+        bodyStyles: {
+            fontSize: 8,
+            halign: 'center'
+        },
+        alternateRowStyles: {
+            fillColor: [245, 245, 245]
+        },
+        columnStyles: {
+            0: { halign: 'left', fontStyle: 'bold', cellWidth: 45 }
+        },
+        footStyles: {
+            fillColor: secondaryColor,
+            textColor: [255, 255, 255],
+            fontStyle: 'bold'
+        },
+        didDrawPage: function() {
+            // Footer
+            doc.setFontSize(8);
+            doc.setTextColor(128, 128, 128);
+            doc.text(
+                `Página ${doc.internal.getCurrentPageInfo().pageNumber}`,
+                105,
+                doc.internal.pageSize.height - 10,
+                { align: 'center' }
+            );
+        },
+        // Destacar la última fila (totales)
+        didParseCell: function(data) {
+            if (data.row.index === data.table.body.length - 1) {
+                data.cell.styles.fillColor = [240, 240, 240];
+                data.cell.styles.fontStyle = 'bold';
+                data.cell.styles.textColor = [0, 0, 0];
+            }
+        }
+    });
+
+    // Agregar estadísticas adicionales
+    const finalY = doc.lastAutoTable.finalY + 10;
+
+    doc.setFontSize(10);
+    doc.setTextColor(0, 0, 0);
+    doc.setFont(undefined, 'bold');
+    doc.text('Resumen:', 14, finalY);
+
+    doc.setFont(undefined, 'normal');
+    doc.setFontSize(9);
+    doc.text(`Total de funcionarios: ${Object.keys(selecciones).length}`, 14, finalY + 7);
+    doc.text(`Total de alimentos: ${granTotal}`, 14, finalY + 14);
+    doc.text(`Promedio por funcionario: ${(granTotal / Object.keys(selecciones).length).toFixed(2)}`, 14, finalY + 21);
+
+    // Guardar PDF
+    doc.save(`seleccion_comidas_${new Date().toISOString().split('T')[0]}.pdf`);
 }
 
 // Inicializar cuando el DOM esté listo
