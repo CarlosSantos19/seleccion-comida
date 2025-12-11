@@ -1,50 +1,57 @@
 // Lista de funcionarios
 const FUNCIONARIOS = [
-    "ALFREDO CORCHO PARRA",
-    "ANDREA MARCELA VILLA MOSQUERA",
-    "ANGELA CRISTINA PARRA PABON",
-    "ANGIE NATALIA ANTONIO MURCIA",
-    "ARELIS DE LA CRUZ LEON ACOSTA",
-    "BETTY ALVARADO VASQUEZ",
-    "CARLOS HORACIO SIERRA HERRERA",
-    "DAISY CECILIA CENDALES SANCHEZ",
-    "DARCIS BARRAGAN GALEANO",
-    "FERNANDO OVALLE BOLIVAR",
-    "GIOMAR BETTINA GRANADOS VERA",
-    "GLORIA ESPERANZA PINILLA MURILLO",
-    "HENRY OSWALDO AMAYA PAEZ",
-    "IVAN FERNANDO VILLANUEVA AYURE",
-    "JOSE YERSON CAMPO CAMPO",
-    "JUAN PABLO RAMIREZ GARCIA",
-    "MARIA FERNANDA ESQU IVIA PAIPA",
-    "MILQUIADES GARAVITO RODRIGUEZ",
-    "MIRYAM JOHANA CABEZAS GUTIERREZ",
-    "OSCAR JAVIER RODRIGUEZ BERNATE",
-    "OSCAR LUIS LEONES ARIAS",
-    "RICARDO BENITO RODRIGUEZ ROSALES",
-    "RUTH YIBETH ALVAREZ BORDA",
-    "SAUL BETANCUR TORO",
-    "SOLMAR EDIR GOMEZ TELLEZ",
-    "VANESSA FABIOLA MARTELO GRACIA",
-    "VICTOR MANUEL OSTOS LEON",
-    "WALDIR ENRIQUE PERTUZ LOBO",
-    "YAMILE DIAZ RUBIO",
-    "YURY KARINE ORTIZ BONILLA",
-    "FABIAN ARLEY TAVERA ZARATE",
-    "DAYAN LORENA TORRES",
-    "MARIO ALEJANDRO HERNANDEZ CRUZ",
-    "LUIS HERNANDO OTALORA",
-    "GLORIA ESTELLA OVIEDO TORRES",
-    "JHONNY ALEXANDER FRACICA PIRABAN",
-    "MAYRA ALEJANDRA RODRIGUEZ REAL",
-    "ROSMIRA ROSA ROSARIO RUIZ",
-    "ANA MARIA AGUIRRE",
-    "SANDRA MARCELA RUBIO QUIBANO",
-    "PAOLA DEL PILAR GASCA CARDOSO",
-    "FABIAN MELO GORDILLO",
-    "MARTHA ISABEL DOMINGUEZ",
-    "DANIELA ALEJANDRA URREA CARDENAS",
-    "GIOVANNY FLOREZ CHAPARRO"
+    "ADRIANA RAMIREZ",
+    "ADRIANA MARCELA FORERO",
+    "ALEXANDER VILLADIEGO VILLADIEGO",
+    "ALICIA CORDOBA BALSERA",
+    "ANA CASTILLO SANCHEZ",
+    "ANDREA LOPERA",
+    "ANGELA CRISTINA PARRA PAVON",
+    "ANGIE DANIELA BARRANTES VARON",
+    "BIBIANA CELY",
+    "CARLOS ANDRES MORENO CRESPO",
+    "CARLOS ANDRES SANTOS HERNANDEZ",
+    "CARLOS ARTURO TAMAYO",
+    "CLAUDIA PATRICIA GARCIA QUINTERO",
+    "DIANA PENA PARRA",
+    "DIANA MILENA MUÑOZ PARRA",
+    "DIONISE RONDON SANCHEZ",
+    "EDISON GOMEZ RUNZA",
+    "ELSA ZABALA CORDOBA",
+    "FREDY ALEXANDER CASTILLO ALFONSO",
+    "JAILTON JAVIER MENDEZ ROJAS",
+    "JAIME LUIS SOLANO VASQUEZ",
+    "JOHANA PAOLA PABON MIRANDA",
+    "JOHN FREDY CARREÑO MORENO",
+    "JONATHAN TAMAYO ALVAREZ",
+    "JUAN PABLO ARIZA BARRERA",
+    "KAROL VANNESA FORY MORENO",
+    "LEIDIS BALLESTEROS GUTIERREZ",
+    "LEIDYS QUIROZ BEDOLLA",
+    "LEZZY BONILLA GONZALEZ",
+    "LILIAM ANDREA BARAJA MELO",
+    "LILIANA BERNAL CORTES",
+    "LOREN STHEFANNY MORENO CONTRERAS",
+    "LUIS FERNANDO DITTA SANABRIA",
+    "LUIS MARIO HERNANDEZ",
+    "LUIS SANTIAGO RODRIGUEZ",
+    "LUZ ADRIANA VELAZQUEZ",
+    "MARELIS FUENTES DE LA CRUZ",
+    "MARIA FERNADA AGUIAR CARDONA",
+    "MARIBEL ROMERO",
+    "MARTHA LUCIA QUINTERO GARCIA",
+    "MAYRA ALEJANDRA GUARIN ARCILA",
+    "MAYRA CRISTINA JIMENEZ OLARTE",
+    "MEINUL ANDRES DE HOYOS TOVAR",
+    "MILENA CONSTANZA MAYOR MONTES",
+    "MONICA MARIA ROTILLE MARTINEZ",
+    "PEDRO LUIS RODRIGUEZ RIOS",
+    "RUBIELA GARCIA VERA",
+    "SANDRA MILENA GARAVITO MELO",
+    "SANDRA PATRICIA VANEGAS GARZON",
+    "SARA NARANJO",
+    "WILMER HERRERA BELEÑO",
+    "YAHAIRA RANGEL PEÑARANDA"
 ];
 
 // Lista de alimentos
@@ -275,40 +282,47 @@ function eliminarSeleccion(funcionario) {
     }
 }
 
-// Exportar a Excel (CSV)
+// Exportar a Excel (XLSX)
 function exportarAExcel() {
     if (Object.keys(selecciones).length === 0) {
         alert('No hay datos para exportar');
         return;
     }
 
-    let csv = 'Funcionario,';
-    csv += ALIMENTOS.map(a => a.nombre).join(',');
-    csv += ',Total\n';
+    // Crear libro de trabajo
+    const wb = XLSX.utils.book_new();
 
+    // Preparar datos para la hoja
+    const data = [];
+
+    // Header principal
+    const headers = ['Funcionario', ...ALIMENTOS.map(a => a.nombre), 'Total'];
+    data.push(headers);
+
+    // Datos de cada funcionario
     Object.keys(selecciones).sort().forEach(funcionario => {
         const seleccion = selecciones[funcionario];
         let total = 0;
-
-        csv += `"${funcionario}",`;
+        const row = [funcionario];
 
         ALIMENTOS.forEach(alimento => {
             const cantidad = seleccion[alimento.id] || 0;
             total += cantidad;
-            csv += `${cantidad},`;
+            row.push(cantidad || 0);
         });
 
-        csv += `${total}\n`;
+        row.push(total);
+        data.push(row);
     });
 
     // Fila de totales
-    csv += 'TOTALES,';
+    const totalesRow = ['TOTALES'];
     ALIMENTOS.forEach(alimento => {
         let totalAlimento = 0;
         Object.values(selecciones).forEach(seleccion => {
             totalAlimento += seleccion[alimento.id] || 0;
         });
-        csv += `${totalAlimento},`;
+        totalesRow.push(totalAlimento);
     });
 
     let granTotal = 0;
@@ -317,20 +331,24 @@ function exportarAExcel() {
             granTotal += cantidad;
         });
     });
-    csv += `${granTotal}\n`;
+    totalesRow.push(granTotal);
+    data.push(totalesRow);
 
-    // Descargar archivo
-    const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8;' });
-    const link = document.createElement('a');
-    const url = URL.createObjectURL(blob);
+    // Crear hoja de trabajo
+    const ws = XLSX.utils.aoa_to_sheet(data);
 
-    link.setAttribute('href', url);
-    link.setAttribute('download', `seleccion_comidas_${new Date().toISOString().split('T')[0]}.csv`);
-    link.style.visibility = 'hidden';
+    // Configurar anchos de columna
+    const colWidths = [{ wch: 35 }]; // Columna de funcionarios más ancha
+    for (let i = 0; i < ALIMENTOS.length + 1; i++) {
+        colWidths.push({ wch: 15 });
+    }
+    ws['!cols'] = colWidths;
 
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    // Agregar la hoja al libro
+    XLSX.utils.book_append_sheet(wb, ws, 'Selección de Comida');
+
+    // Generar archivo y descargar
+    XLSX.writeFile(wb, `seleccion_comidas_${new Date().toISOString().split('T')[0]}.xlsx`);
 }
 
 // Exportar a PDF
