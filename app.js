@@ -68,7 +68,7 @@ const ALIMENTOS = [
 ];
 
 // Variables globales
-let selecciones = JSON.parse(localStorage.getItem('selecciones')) || {};
+let selecciones = {};
 let funcionarioActual = '';
 
 // Elementos del DOM
@@ -81,11 +81,45 @@ const btnExportCSV = document.getElementById('btnExportCSV');
 const btnClearAll = document.getElementById('btnClearAll');
 const summaryTable = document.getElementById('summaryTable');
 
+// Referencia a Firebase
+const seleccionesRef = database.ref('selecciones');
+
 // Inicializar aplicación
 function init() {
     cargarFuncionarios();
     configurarEventos();
-    actualizarResumen();
+    cargarDatosFirebase();
+    escucharCambiosFirebase();
+}
+
+// Cargar datos desde Firebase
+function cargarDatosFirebase() {
+    seleccionesRef.once('value', (snapshot) => {
+        const data = snapshot.val();
+        if (data) {
+            selecciones = data;
+            actualizarResumen();
+        }
+    });
+}
+
+// Escuchar cambios en tiempo real desde Firebase
+function escucharCambiosFirebase() {
+    seleccionesRef.on('value', (snapshot) => {
+        const data = snapshot.val();
+        if (data) {
+            selecciones = data;
+            actualizarResumen();
+
+            // Si el funcionario actual tiene datos, recargarlos
+            if (funcionarioActual && selecciones[funcionarioActual]) {
+                cargarSeleccionFuncionario();
+            }
+        } else {
+            selecciones = {};
+            actualizarResumen();
+        }
+    });
 }
 
 // Cargar funcionarios en el select
@@ -141,10 +175,14 @@ function configurarEventos() {
     // Botón limpiar todo
     btnClearAll.addEventListener('click', () => {
         if (confirm('¿Está seguro de que desea eliminar todas las selecciones?')) {
-            selecciones = {};
-            localStorage.removeItem('selecciones');
-            actualizarResumen();
-            limpiarContadores();
+            seleccionesRef.remove()
+                .then(() => {
+                    alert('Todas las selecciones han sido eliminadas');
+                })
+                .catch((error) => {
+                    console.error('Error al limpiar:', error);
+                    alert('Error al eliminar las selecciones. Por favor intente nuevamente.');
+                });
         }
     });
 }
@@ -200,17 +238,21 @@ function guardarSeleccion() {
         return;
     }
 
-    selecciones[funcionarioActual] = seleccion;
-    localStorage.setItem('selecciones', JSON.stringify(selecciones));
+    // Guardar en Firebase
+    seleccionesRef.child(funcionarioActual).set(seleccion)
+        .then(() => {
+            alert('Selección guardada exitosamente');
 
-    alert('Selección guardada exitosamente');
-    actualizarResumen();
-
-    // Limpiar y resetear
-    funcionarioSelect.value = '';
-    funcionarioActual = '';
-    foodCounters.classList.remove('active');
-    limpiarContadores();
+            // Limpiar y resetear
+            funcionarioSelect.value = '';
+            funcionarioActual = '';
+            foodCounters.classList.remove('active');
+            limpiarContadores();
+        })
+        .catch((error) => {
+            console.error('Error al guardar:', error);
+            alert('Error al guardar la selección. Por favor intente nuevamente.');
+        });
 }
 
 // Actualizar resumen
@@ -276,9 +318,14 @@ function actualizarResumen() {
 // Eliminar selección
 function eliminarSeleccion(funcionario) {
     if (confirm(`¿Está seguro de eliminar la selección de ${funcionario}?`)) {
-        delete selecciones[funcionario];
-        localStorage.setItem('selecciones', JSON.stringify(selecciones));
-        actualizarResumen();
+        seleccionesRef.child(funcionario).remove()
+            .then(() => {
+                console.log('Selección eliminada exitosamente');
+            })
+            .catch((error) => {
+                console.error('Error al eliminar:', error);
+                alert('Error al eliminar la selección. Por favor intente nuevamente.');
+            });
     }
 }
 
