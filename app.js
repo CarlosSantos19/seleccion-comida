@@ -124,9 +124,6 @@ const btnSave = document.getElementById('btnSave');
 const btnReset = document.getElementById('btnReset');
 const btnExport = document.getElementById('btnExport');
 const btnExportCSV = document.getElementById('btnExportCSV');
-const btnBackup = document.getElementById('btnBackup');
-const btnRestore = document.getElementById('btnRestore');
-const fileInput = document.getElementById('fileInput');
 const summaryTable = document.getElementById('summaryTable');
 
 // Referencia a Firebase
@@ -221,17 +218,6 @@ function configurarEventos() {
 
     // Botón exportar PDF
     btnExport.addEventListener('click', exportarAPDF);
-
-    // Botón backup
-    btnBackup.addEventListener('click', descargarBackup);
-
-    // Botón restaurar
-    btnRestore.addEventListener('click', () => {
-        fileInput.click();
-    });
-
-    // Input de archivo
-    fileInput.addEventListener('change', restaurarBackup);
 }
 
 // Cambiar contador
@@ -604,85 +590,6 @@ function exportarAPDF() {
 
     // Guardar PDF
     doc.save(`seleccion_comidas_${new Date().toISOString().split('T')[0]}.pdf`);
-}
-
-// Descargar backup JSON
-function descargarBackup() {
-    if (Object.keys(selecciones).length === 0) {
-        alert('No hay datos para respaldar');
-        return;
-    }
-
-    const backup = {
-        fecha: new Date().toISOString(),
-        version: '1.0',
-        totalRegistros: Object.keys(selecciones).length,
-        datos: selecciones
-    };
-
-    const jsonString = JSON.stringify(backup, null, 2);
-    const blob = new Blob([jsonString], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `backup_seleccion_comidas_${new Date().toISOString().split('T')[0]}.json`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-
-    console.log('Backup creado exitosamente');
-}
-
-// Restaurar desde backup JSON
-function restaurarBackup(event) {
-    const file = event.target.files[0];
-    if (!file) return;
-
-    const reader = new FileReader();
-    reader.onload = (e) => {
-        try {
-            const content = JSON.parse(e.target.result);
-
-            // Validar estructura del backup
-            if (!content.datos) {
-                alert('Error: El archivo no tiene el formato correcto');
-                return;
-            }
-
-            const numRegistros = Object.keys(content.datos).length;
-
-            const confirmacion = confirm(
-                `Archivo de backup encontrado:\n\n` +
-                `Fecha: ${new Date(content.fecha).toLocaleString('es-ES')}\n` +
-                `Registros: ${numRegistros}\n\n` +
-                `¿Desea restaurar estos datos?\n\n` +
-                `ADVERTENCIA: Esto sobrescribirá los datos actuales.`
-            );
-
-            if (confirmacion) {
-                // Restaurar datos en Firebase
-                seleccionesRef.set(content.datos)
-                    .then(() => {
-                        alert(`✓ Backup restaurado exitosamente.\n\n${numRegistros} registros recuperados.`);
-                        selecciones = content.datos;
-                        actualizarResumen();
-                    })
-                    .catch((error) => {
-                        console.error('Error al restaurar:', error);
-                        alert('Error al restaurar el backup. Por favor intente nuevamente.');
-                    });
-            }
-        } catch (error) {
-            console.error('Error al leer el archivo:', error);
-            alert('Error: El archivo no es un JSON válido');
-        }
-
-        // Limpiar el input
-        fileInput.value = '';
-    };
-
-    reader.readAsText(file);
 }
 
 // Hacer funciones accesibles globalmente para onclick
