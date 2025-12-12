@@ -426,7 +426,9 @@ h2 i {
 
 .btn-export,
 .btn-export-csv,
-.btn-clear-all {
+.btn-clear-all,
+.btn-backup,
+.btn-restore {
     padding: 12px 25px;
     font-size: 15px;
     font-weight: bold;
@@ -439,7 +441,9 @@ h2 i {
 
 .btn-export i,
 .btn-export-csv i,
-.btn-clear-all i {
+.btn-clear-all i,
+.btn-backup i,
+.btn-restore i {
     margin-right: 8px;
 }
 
@@ -474,6 +478,28 @@ h2 i {
     background: linear-gradient(135deg, #ff5252 0%, #c82333 100%);
     transform: translateY(-3px);
     box-shadow: 0 6px 20px rgba(220, 53, 69, 0.4);
+}
+
+.btn-backup {
+    background: linear-gradient(135deg, #5c7cfa 0%, #4c6ef5 100%);
+    color: white;
+}
+
+.btn-backup:hover {
+    background: linear-gradient(135deg, #4c6ef5 0%, #3b5bdb 100%);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(76, 110, 245, 0.4);
+}
+
+.btn-restore {
+    background: linear-gradient(135deg, #20c997 0%, #12b886 100%);
+    color: white;
+}
+
+.btn-restore:hover {
+    background: linear-gradient(135deg, #12b886 0%, #0ca678 100%);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(18, 184, 134, 0.4);
 }
 
 #summaryTable {
