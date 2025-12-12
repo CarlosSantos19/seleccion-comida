@@ -123,7 +123,6 @@ const btnSave = document.getElementById('btnSave');
 const btnReset = document.getElementById('btnReset');
 const btnExport = document.getElementById('btnExport');
 const btnExportCSV = document.getElementById('btnExportCSV');
-const btnClearAll = document.getElementById('btnClearAll');
 const btnBackup = document.getElementById('btnBackup');
 const btnRestore = document.getElementById('btnRestore');
 const fileInput = document.getElementById('fileInput');
@@ -230,48 +229,6 @@ function configurarEventos() {
 
     // Input de archivo
     fileInput.addEventListener('change', restaurarBackup);
-
-    // Botón limpiar todo con doble confirmación
-    btnClearAll.addEventListener('click', () => {
-        const numSelecciones = Object.keys(selecciones).length;
-
-        if (numSelecciones === 0) {
-            alert('No hay datos para eliminar');
-            return;
-        }
-
-        const confirmacion1 = confirm(
-            `⚠️ ADVERTENCIA ⚠️\n\n` +
-            `Está a punto de ELIMINAR PERMANENTEMENTE todas las selecciones.\n\n` +
-            `Total de registros: ${numSelecciones}\n\n` +
-            `¿Desea crear un backup automático antes de continuar?`
-        );
-
-        if (confirmacion1) {
-            // Crear backup automático
-            descargarBackup();
-
-            // Segunda confirmación
-            setTimeout(() => {
-                const confirmacion2 = confirm(
-                    `Backup creado.\n\n` +
-                    `¿Está COMPLETAMENTE SEGURO de que desea ELIMINAR todos los datos?\n\n` +
-                    `Esta acción NO se puede deshacer.`
-                );
-
-                if (confirmacion2) {
-                    seleccionesRef.remove()
-                        .then(() => {
-                            alert('✓ Todas las selecciones han sido eliminadas.\n\nPuede restaurar el backup si lo necesita.');
-                        })
-                        .catch((error) => {
-                            console.error('Error al limpiar:', error);
-                            alert('Error al eliminar las selecciones. Por favor intente nuevamente.');
-                        });
-                }
-            }, 500);
-        }
-    });
 }
 
 // Cambiar contador
@@ -372,7 +329,14 @@ function actualizarResumen() {
         });
 
         html += `<td><strong>${total}</strong></td>`;
-        html += `<td><button class="delete-btn" onclick="eliminarSeleccion('${funcionario}')">Eliminar</button></td>`;
+        html += `<td>
+            <button class="action-btn edit-btn" onclick="editarSeleccion('${funcionario}')">
+                <i class="fas fa-edit"></i> Editar
+            </button>
+            <button class="action-btn delete-btn" onclick="eliminarSeleccion('${funcionario}')">
+                <i class="fas fa-trash"></i> Eliminar
+            </button>
+        </td>`;
         html += '</tr>';
     });
 
@@ -400,6 +364,22 @@ function actualizarResumen() {
 
     html += '</tbody></table>';
     summaryTable.innerHTML = html;
+}
+
+// Editar selección
+function editarSeleccion(funcionario) {
+    // Seleccionar el funcionario en el dropdown
+    funcionarioSelect.value = funcionario;
+    funcionarioActual = funcionario;
+
+    // Activar el panel de selección
+    foodCounters.classList.add('active');
+
+    // Cargar los datos actuales
+    cargarSeleccionFuncionario();
+
+    // Scroll suave hacia arriba
+    window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 // Eliminar selección

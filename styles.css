@@ -556,8 +556,7 @@ table tbody tr:last-child:hover {
     background: linear-gradient(90deg, #e9ecef 0%, #dee2e6 100%);
 }
 
-.delete-btn {
-    background: linear-gradient(135deg, #ff6b6b 0%, #dc3545 100%);
+.action-btn {
     color: white;
     border: none;
     padding: 8px 16px;
@@ -566,6 +565,22 @@ table tbody tr:last-child:hover {
     font-size: 13px;
     font-weight: bold;
     transition: all 0.3s;
+    margin-right: 5px;
+}
+
+.edit-btn {
+    background: linear-gradient(135deg, #5c7cfa 0%, #4c6ef5 100%);
+    box-shadow: 0 2px 8px rgba(76, 110, 245, 0.3);
+}
+
+.edit-btn:hover {
+    background: linear-gradient(135deg, #4c6ef5 0%, #3b5bdb 100%);
+    transform: scale(1.1);
+    box-shadow: 0 4px 12px rgba(76, 110, 245, 0.5);
+}
+
+.delete-btn {
+    background: linear-gradient(135deg, #ff6b6b 0%, #dc3545 100%);
     box-shadow: 0 2px 8px rgba(220, 53, 69, 0.3);
 }
 
