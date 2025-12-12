@@ -683,5 +683,9 @@ function restaurarBackup(event) {
     reader.readAsText(file);
 }
 
+// Hacer funciones accesibles globalmente para onclick
+window.editarSeleccion = editarSeleccion;
+window.eliminarSeleccion = eliminarSeleccion;
+
 // Inicializar cuando el DOM esté listo
 document.addEventListener('DOMContentLoaded', init);
