@@ -196,14 +196,16 @@ function configurarEventos() {
     // Botones de incrementar/decrementar
     document.querySelectorAll('.btn-increase').forEach(btn => {
         btn.addEventListener('click', (e) => {
-            const food = e.target.dataset.food;
+            const button = e.target.closest('.btn-increase');
+            const food = button.dataset.food;
             cambiarContador(food, 1);
         });
     });
 
     document.querySelectorAll('.btn-decrease').forEach(btn => {
         btn.addEventListener('click', (e) => {
-            const food = e.target.dataset.food;
+            const button = e.target.closest('.btn-decrease');
+            const food = button.dataset.food;
             cambiarContador(food, -1);
         });
     });
