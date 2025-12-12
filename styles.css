@@ -509,7 +509,8 @@ h2 i {
 }
 
 table {
-    width: 100%;
+    width: max-content;
+    min-width: 100%;
     border-collapse: collapse;
     margin-top: 20px;
     background: white;
@@ -517,9 +518,26 @@ table {
 
 table th,
 table td {
-    padding: 15px;
-    text-align: left;
+    padding: 12px 10px;
+    text-align: center;
     border-bottom: 2px solid #e9ecef;
+    white-space: nowrap;
+}
+
+table th:first-child,
+table td:first-child {
+    text-align: left;
+    padding-left: 15px;
+    min-width: 250px;
+}
+
+table th:last-child,
+table td:last-child {
+    text-align: center;
+    min-width: 180px;
+    position: sticky;
+    right: 0;
+    background: white;
 }
 
 table th {
@@ -531,6 +549,11 @@ table th {
     text-transform: uppercase;
     font-size: 0.9em;
     letter-spacing: 1px;
+}
+
+table th:last-child {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    z-index: 2;
 }
 
 table tr {
