@@ -10,8 +10,10 @@ const firebaseConfig = {
     measurementId: "G-RHN4E645EG"
 };
 
-// Inicializar Firebase
-firebase.initializeApp(firebaseConfig);
+// Inicializar Firebase solo si no ha sido inicializado
+if (!firebase.apps.length) {
+    firebase.initializeApp(firebaseConfig);
+}
 
 // Obtener referencia a la base de datos
 const database = firebase.database();
