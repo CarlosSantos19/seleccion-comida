@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apuestas Final - Junior vs Tolima</title>
+    <link rel="stylesheet" href="apuestas.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+    <script src="firebase-config.js"></script>
+</head>
+<body>
+    <div class="background-decoration">
+        <div class="ball-icon">⚽</div>
+        <div class="ball-icon">🏆</div>
+        <div class="ball-icon">⚽</div>
+    </div>
+
+    <div class="container">
+        <div class="header-section">
+            <div class="header-icon">🏆</div>
+            <h1>Apuestas Final</h1>
+            <p class="subtitle">Junior vs Tolima</p>
+            <div class="match-info">
+                <div class="team junior">
+                    <div class="team-logo">🔴⚪</div>
+                    <div class="team-name">JUNIOR</div>
+                </div>
+                <div class="vs">VS</div>
+                <div class="team tolima">
+                    <div class="team-logo">🟡🔴</div>
+                    <div class="team-name">TOLIMA</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="bet-section">
+            <div class="apostador-selector">
+                <label for="apostadorInput">
+                    <i class="fas fa-user"></i> Nombre del Apostador:
+                </label>
+                <input type="text" id="apostadorInput" placeholder="Ingrese su nombre">
+            </div>
+
+            <div class="bet-form" id="betForm">
+                <h2><i class="fas fa-trophy"></i> Haga su apuesta:</h2>
+
+                <div class="bet-options">
+                    <h3>¿Quién ganará?</h3>
+                    <div class="resultado-options">
+                        <button class="resultado-btn" data-resultado="junior">
+                            <i class="fas fa-star"></i> Gana Junior
+                        </button>
+                        <button class="resultado-btn" data-resultado="empate">
+                            <i class="fas fa-handshake"></i> Empate
+                        </button>
+                        <button class="resultado-btn" data-resultado="tolima">
+                            <i class="fas fa-star"></i> Gana Tolima
+                        </button>
+                    </div>
+                </div>
+
+                <div class="score-section">
+                    <h3>Marcador Final (Opcional)</h3>
+                    <div class="score-inputs">
+                        <div class="score-input-group">
+                            <label>Junior</label>
+                            <input type="number" id="golesJunior" min="0" max="20" value="0">
+                        </div>
+                        <div class="score-separator">-</div>
+                        <div class="score-input-group">
+                            <label>Tolima</label>
+                            <input type="number" id="golesTolima" min="0" max="20" value="0">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="monto-section">
+                    <label for="montoApuesta">
+                        <i class="fas fa-dollar-sign"></i> Monto de la Apuesta:
+                    </label>
+                    <input type="number" id="montoApuesta" min="1000" step="1000" placeholder="Ej: 10000">
+                </div>
+
+                <div class="actions">
+                    <button class="btn-save" id="btnSave">
+                        <i class="fas fa-save"></i> Registrar Apuesta
+                    </button>
+                    <button class="btn-reset" id="btnReset">
+                        <i class="fas fa-eraser"></i> Limpiar
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="summary-section">
+            <h2><i class="fas fa-list"></i> Resumen de Apuestas</h2>
+            <div class="summary-stats" id="summaryStats">
+                <div class="stat-card">
+                    <div class="stat-icon">👥</div>
+                    <div class="stat-value" id="totalApuestas">0</div>
+                    <div class="stat-label">Total Apuestas</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">💰</div>
+                    <div class="stat-value" id="totalDinero">$0</div>
+                    <div class="stat-label">Total Dinero</div>
+                </div>
+                <div class="stat-card junior-card">
+                    <div class="stat-icon">🔴</div>
+                    <div class="stat-value" id="apuestasJunior">0</div>
+                    <div class="stat-label">Apuestan Junior</div>
+                </div>
+                <div class="stat-card tolima-card">
+                    <div class="stat-icon">🟡</div>
+                    <div class="stat-value" id="apuestasTolima">0</div>
+                    <div class="stat-label">Apuestan Tolima</div>
+                </div>
+            </div>
+
+            <div class="summary-controls">
+                <button class="btn-export-csv" id="btnExportCSV">
+                    <i class="fas fa-file-excel"></i> Exportar Excel
+                </button>
+                <button class="btn-export" id="btnExport">
+                    <i class="fas fa-file-pdf"></i> Exportar PDF
+                </button>
+            </div>
+            <div id="summaryTable"></div>
+        </div>
+    </div>
+
+    <script src="apuestas.js"></script>
+</body>
+</html>
